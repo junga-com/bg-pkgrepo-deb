@@ -1,0 +1,10 @@
+profileName=
+profileGitURL=
+projectName=bg-pkgRepo-deb
+packageName=bg-pkgrepo-deb
+projectType=package
+companyName=
+targetDists="focal"
+defaultDebRepo=
+creationDate=""
+createdBy="Robert E. Griffith <36312888+bobjunga@users.noreply.github.com>"

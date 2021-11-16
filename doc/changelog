@@ -1,0 +1,5 @@
+bg-pkgrepo-deb (1.0.0) focal; urgency=high
+
+  * initial dev
+
+ -- Robert E. Griffith <36312888+bobjunga@users.noreply.github.com>  Tue, 16 Nov 2021 14:23:04 -0500
