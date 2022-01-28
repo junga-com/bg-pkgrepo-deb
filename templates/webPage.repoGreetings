@@ -1,0 +1,43 @@
+<!doctype html>
+<html class="no-js" lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Software Package Repository</title>
+		<meta name="description" content="debian standard package repository for ubuntu derivative OS">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<style>
+			body {
+				display: flex;
+				justify-content: center;
+			}
+			#theBox {
+				width:50em;
+			}
+			div {
+				margin-bottom:2em;
+				padding:1em;
+				font-family: sans-serif;
+			}
+			#intro {
+				background:lightgrey;
+			}
+		</style>
+
+	</head>
+	<body><div id=theBox>
+		<div id=intro>
+			This is the software package repository for the domain <b>%domain%</b>.
+			</p>
+			Linux workstations and servers in this domain should be configured to use this as their software repository. It is a
+			mirror of archive.ubuntu.com that adds additional software and removes software that is against domain policy.
+			</p>
+			To use this repository, the /etc/apt/sources.list configuration file should use <b>%repoServerName%</b> as the domain for
+			all sources instead of <i>*archive.ubuntu.com</i>
+		</div>
+
+		<div id=listing>
+			<a href="ubuntu/dists/">Browse Files in the repository</a>
+		</div>
+	</div></body>
+</html>
