@@ -2,7 +2,7 @@
 
 This article tries to explain how debian package repositories work. I found it difficult to find this information when I wrote the
 bg-pkgRepo-deb project so I am documenting what I found here. Note that some of my assertions may be conjecture based on my experience
-a nd observations as a long time user of ubuntu. I welcome input to correct any errant information.
+and observations as a long time user of ubuntu. I welcome input to correct any errant information.
 
 I use ubuntu which derives from debian. Even though ubuntu uses the debian standard, it uses that standard differently to provide
 its release structure. Much of what I describe will be true for debian and other debian based distributions but the specifics will
@@ -17,12 +17,25 @@ users on that device are able to install any of the software contained in the re
 Unlike closed app stores, a linux device can specify which repository makes software available to it and can specify multiple
 repositories whose contents are logically combined together in a union. When the same software package name is available from
 multiple repositories used by a device, the version numbers of the packages determine which one is installed by default. If two
-repositories contain the same exact version of a package name, they are not technically compatible to be used by the same device.
+repositories contain the same exact version of a package name, they are not technically compatible to be used at the same time.
+
+So even though we might think of a debian package repository for a particular distribution release (say Ubuntu focal) as a single
+entity, it is actually several repository entities that the client installation cobbles together in its apt sources.list file. A
+typical Ubuntu focal installation would use the repositories focal, focal-security, and focal-updates to produce the union of
+software that is Ubuntu focal.   
 
 We can think of a particular set of compatible repositories as a logical operating system complete with the full set of software
-that is 'approved' to be installed. A running device that uses that repository set gets a subset of the system installed initially
+that is could be installed. By adding a new repository, say a PPA for a specific piece of software, we are extending the logical
+operating system that the client has installed.
+
+, A running device that uses that repository set gets a subset of the system installed initially
 and can then can install other software from the approved set as needed. This is particularly useful in an organization that wants
 limit the software running on its devices to an approved set of software.
+
+Such an organization would make policy that devices controlled by the organization would only use the repository server that the
+organization operates and would not be allowed to add third party repositories (PPA, etc...).
+
+The organization that runs a
 
 
 
@@ -34,13 +47,14 @@ the several repositories that make up the official OS release of which some opti
 preferences during installation and then maintained by the software update utility.
 
 The folder /etc/apt/sources.list.d/ is meant for the user to add additional repositories that add to the base OS repositories. Sometimes
-a repository contains a single logical software package. By providing a repository, the software author provides a way not only to
-install the software but also to automatically distribute updates.
+those repositories contain additional software packages, sometimes they contain different versions of packages in the ubuntu repositories.
+By providing a repository, the software author provides a way not only to install the software but also a way to automatically distribute
+updates.
 
-The command '''apt update''' retrieves the current list of software packages from each repository specified in those files and
+The command '''apt update''' retrieves the current list of software packages from each repository specified in the sources.list* files and
 makes a local database of the union all packages available. By default, only the latest version of each package is available to install.
 
-After updating the lists from repositories, it is common that some previously installed packages might have new versions available.
+After updating the lists from repositories, it is common that some previously installed packages might have newer versions available.
 The command '''apt upgrade''' will install the newer version of all such packages.
 
 Regardless of which file its resides in, the apt configuration consists of lines that specify these parts.
@@ -53,22 +67,42 @@ deb http://us.archive.ubuntu.com/ubuntu/  focal-updates    main restricted
     '----URL---------------------------'  '--channel--'   '- components--'
 '''
 
+When apt connects to a repository specified in the sources.list* config, it also uses the architecture of the device its running on
+to further identify the exact list of software. On each repository server, the triplet (<channel>,<component>,<arch>) identifies
+a Packages file that contains the list of packages available to the client.
+
 
 ## Debian-style Repository Structure
-We can think of a logical debian-style repository as a cube because it contains three somewhat independent dimensions.
+We can think of a logical debian-style repository as a 3D block because it contains three somewhat independent dimensions.
 * Repository Channels (aka suite): determine how software is updated
-* Repository Components: determine the set of software available
+* Repository Components: separate the software within a channel by categories that can be selected.
 * Repository Architectures: determines the specific files appropriate for a device's CPU
 
-Unfortunately these are only somewhat independent because Architectures are nested under Components and Components are nested under
-Channels (aka suite) and the actual thing that devices can add to their apt configurations are triplets of all three. This means that
-if I choose an update strategy (e.g. only security updates) I must consider the appropriate channels to include for each Component
-that I want to use and its possible that some components might come from a different server and the channel names and policies might
-be different.
+We can think of the 3D block as being made up of atomic cubes which are the things that we specify in the sources.list lines.
+Each cube is identified by the triplet (channel,component,arch) and is a unit that a sources.list file can choose to include or not.
+Note that the arch is implicitly determined by the device on which the source.list resides so its not specified in the sources.list
+lines. Each config line in sources.list identifies exactly one channel (like focal, focal-security, xenial-updates, etc...) and one
+or more components (main, universe, etc...).
+
+Debian and ubuntu use channels to implement the ongoing release strategy (base focal, focal-security,focal-updates, focal-proposed).
+Each of channel of a particular release logically contains the same potential set of software but at different versions.
+
+What makes this messy is that the policy of using channel to specify what update policy you want to follow and using components
+to specify what set of software you want available, is not typically followed by third party repositories -- not even the PPAs that
+ubuntu's launchpad server hosts for its users. A PPA will provide a channel named for the base release (like focal) and the component
+'main', even if it provides novel packages that are not present in the ubuntu hosted 'focal' 'main' component.
+
+Each repository server operator decides the names of the channels and components it provides and they dont have to follow any standard.
+Hopefully, the names will reflect which base distribution and release that repo can be safely added to but they do not have to.
+
+Many third party repos will provide a channel named for each supported ubuntu release (focal, xenial, etc...) but maintains those
+channels like ubuntu maintains its <releaseName>-updates channel (i.e. new versions are added when they are have been tested). Google
+maintains different channels for stable, beta, developer, and nightly builds of chrome.
 
 The term 'repository' is overloaded and is hard to use consistently. In one sense its a website like archive.ubuntu.com. In another
 sense its group of channels (aka suit) that correspond to a given release (i.e. the Ubuntu focal repository). And, yet again it is
-the triplet configured on a source.list configuration line that is actually the thing that defines a set of software that can be used.
+the triplet configured on a source.list configuration line that is actually the thing that defines a set of software that is
+available to the host.
 
 
 ### Repository Channels (aka suite): Combining Repositories to Create a Release Strategy

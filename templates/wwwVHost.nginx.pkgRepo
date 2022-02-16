@@ -25,11 +25,17 @@ server {
         #autoindex format html; # Display the directory in the browser in HTML style
         #autoindex exact_ size off; # After switching to off, the file size is displayed in a readable manner, in KB, MB or GB
         #autoindex localtime on; # The time displayed is the file time of the server
-        try_files $uri $uri/ @proxy;
     }
 
+	location /ubuntu/pool
+    {
+		# TODO: is there a better way to jump to the @proxy section?
+        try_files  @proxy @proxy;
+    }
+
+	# TODO: improve the proxy config to 1) whitelist the deb files that it will download. 2) store the files in-place instead of in ./cache/...
     location @proxy {
-        proxy_pass             http://mirrors.edge.kernel.org;
+        proxy_pass             https://%repoUpstream%;
         proxy_set_header       Host $host;
         proxy_buffering        on;
         proxy_cache            STATIC;
