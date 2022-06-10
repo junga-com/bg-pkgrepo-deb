@@ -201,7 +201,7 @@ function cr_pkgRepoIsHealthy::apply() {
 
 # usage: _repoCompress <indexFile> [<compType1> ... <compTypeN>]
 # helper function to compress a file with multiple standards and possibly leave the uncompressed file also.
-# The default is to remove the original uncompressing file but if '-' is specified amoung the <compType>, it will remain.
+# The default is to remove the original uncompressing file but if '-' is specified among the <compType>, it will remain.
 # Params:
 #    <indexFile> : the index file to compress. It should NOT be compressed and should NOT have a .gz or .xz extension
 #    <compTypeN> : the compression type to apply to the index. one of (- gz xz). '-' means to leave the original uncompressed file
