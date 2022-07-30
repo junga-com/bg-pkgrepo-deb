@@ -1,4 +1,4 @@
-bg-pkgrepo-deb (1.0.0) focal; urgency=high
+bg-pkgrepo-deb (0.1.0) focal; urgency=high
 
   * initial dev
 
