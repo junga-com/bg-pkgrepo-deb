@@ -57,7 +57,7 @@
 # whishes to make available and with any blacklisted packages removed. The unhidden files in ./staging/<channel> are the new indexes
 # that are in the structure required by the repository standard but are not yet visible via the nginx vhost.
 #
-# The update process is idempotent so if it is interupted, it can be restarted after addressing the issue that cause it to stop.
+# The update process is idempotent so if it is interrupted, it can be restarted after addressing the issue that cause it to stop.
 # If a passphrase is set on the private repo key, the user will be prompted for it.
 # The last step in the update process will copy the entire non-hidden tree to the ./www/ubuntu/dists/ tree.
 #
